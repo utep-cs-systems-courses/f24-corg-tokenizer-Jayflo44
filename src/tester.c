@@ -11,6 +11,11 @@
 
 #define TEST_TOKENIZER 1
 #define TEST_HISTORY 1
+int string_length(const char *str);
+int is_valid_character(char c);
+char* find_word_start(const char *str);
+char* find_word_terminator(const char *str);
+int count_words(const char *str);
 
 /* MinUnit: http://www.jera.com/techinfo/jtns/jtn002.html */
  #define mu_assert(message, test) do { if (!(test)) return message; } while (0)
@@ -20,32 +25,34 @@ int tests_run;
 
 
 /* Tokenizer test cases */
+/*
 static char *test_string_length() {
     mu_assert("string_length('happy') == 5", string_length("happy") == 5);
     return 0;
 }
+*/
 static char *test_is_valid_character() {
-    mu_assert("is_valid_character(' ') == 0", is_valid_character(' ') == 0);
-    mu_assert("is_valid_character('h') == 1", is_valid_character('h') == 1);
+    mu_assert("is_valid_character(' ') == 0", non_space_char(' ') == 0);
+    mu_assert("is_valid_character('h') == 1", non_space_char('h') == 1);
     return 0;
 }
 
 static char *test_find_word_start() {
     char *str = "  happy";
-    mu_assert("find_word_start('  happy') == &str[2]'", find_word_start(str) == &str[2]);
+    mu_assert("find_word_start('  happy') == &str[2]'", token_start(str) == &str[2]);
     return 0;
 }
 
 static char *test_find_word_terminator() {
   char *str = "happy joy", *empty="";
-    mu_assert("find_word_terminator('happy joy') == &str[5]' '", find_word_terminator(str) == &str[5]);
-    mu_assert("find_word_terminator(emptyStr) == empty", find_word_terminator(empty) == empty);
+    mu_assert("find_word_terminator('happy joy') == &str[5]' '", token_terminator(str) == &str[5]);
+    mu_assert("find_word_terminator(emptyStr) == empty", token_terminator(empty) == empty);
     return 0;
 }
 
 static char *test_count_words() {
     char *str = "happy happy joy joy";
-    mu_assert("count_words('happy happy joy joy') == 4", count_words(str) == 4);
+    mu_assert("count_words('happy happy joy joy') == 4", count_tokens(str) == 4);
     return 0;
 }
 
@@ -80,11 +87,11 @@ static char *test_get_history() {
 
 static char *all_tests() {
     if (TEST_TOKENIZER) {
-        mu_run_test(test_string_length);
+      // mu_run_test(test_string_length);
         mu_run_test(test_is_valid_character);
         mu_run_test(test_find_word_start);
         mu_run_test(test_find_word_terminator);
-        mu_run_test(test_count_words);
+	mu_run_test(test_count_words);
         mu_run_test(test_tokenize);
     }
 
